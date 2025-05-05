@@ -17,33 +17,27 @@ async function loadCourses() {
         container.appendChild(courseDiv);
     });
 }
+
 // Създаване на кастомния курсор
 const cursor = document.createElement('div');
 cursor.classList.add('cursor');
 document.body.appendChild(cursor);
 
-// Функция за преместване на курсора
 document.addEventListener('mousemove', (e) => {
     cursor.style.left = `${e.clientX}px`;
     cursor.style.top = `${e.clientY}px`;
-});
 
-// Функция за създаване на пръски
-document.addEventListener('mousemove', (e) => {
     const splash = document.createElement('div');
     splash.classList.add('cursor-splash');
     document.body.appendChild(splash);
 
-    // Разположение на пръската около курсора
     splash.style.left = `${e.clientX - 5}px`;
     splash.style.top = `${e.clientY - 5}px`;
 
-    // Премахване на пръската след анимацията
     setTimeout(() => {
         splash.remove();
     }, 600);
 });
-
 
 async function loadLessons(courseID) {
     const res = await fetch("http://localhost:5050/api/Lessons");
@@ -90,6 +84,9 @@ async function loadQuizForLesson(lessonID) {
     const questions = await (await fetch("http://localhost:5050/api/Questions")).json();
     const quizQuestions = questions.filter(q => q.quizID === quiz.quizID);
 
+    const allAnswers = await (await fetch("http://localhost:5050/api/Answers")).json();
+    const quizAnswers = allAnswers.filter(a => quizQuestions.some(q => q.questionID === a.questionID));
+
     const quizDiv = document.getElementById("quizContent");
     quizDiv.innerHTML = "";
 
@@ -97,20 +94,23 @@ async function loadQuizForLesson(lessonID) {
         const questionEl = document.createElement("div");
         questionEl.classList.add("question-block");
 
-        if (q.questionText.toLowerCase().includes("променлива")) {
-            questionEl.innerHTML = `
-                <p><strong>Въпрос ${i + 1}:</strong> ${q.questionText}</p>
-                <label><input type="radio" name="q${q.questionID}" value="Променлива е място в паметта, където се съхраняват стойности."> Променлива е място в паметта, където се съхраняват стойности.</label><br>
-                <label><input type="radio" name="q${q.questionID}" value="Променлива е CSS клас."> Променлива е CSS клас.</label><br>
-                <label><input type="radio" name="q${q.questionID}" value="Променлива е команда за компилация."> Променлива е команда за компилация.</label>
-            `;
+        const answersForQuestion = quizAnswers.filter(a => a.questionID === q.questionID);
+
+        let html = `<p><strong>Въпрос ${i + 1}:</strong> ${q.questionText}</p>`;
+
+        if (answersForQuestion.length > 0) {
+            answersForQuestion.forEach(a => {
+                html += `
+                    <label>
+                        <input type="radio" name="q${q.questionID}" value="${a.answerText}">
+                        ${a.answerText}
+                    </label><br>`;
+            });
         } else {
-            questionEl.innerHTML = `
-                <p><strong>Въпрос ${i + 1}:</strong> ${q.questionText}</p>
-                <input type="text" id="answer-${q.questionID}" placeholder="Вашият отговор">
-            `;
+            html += `<input type="text" id="answer-${q.questionID}" placeholder="Вашият отговор">`;
         }
 
+        questionEl.innerHTML = html;
         quizDiv.appendChild(questionEl);
     });
 
@@ -120,18 +120,18 @@ async function loadQuizForLesson(lessonID) {
         let allCorrect = true;
 
         for (const q of quizQuestions) {
+            const answersForQuestion = quizAnswers.filter(a => a.questionID === q.questionID);
+            const correctAnswer = answersForQuestion.find(a => a.isCorrect);
+
             let userAnswer = "";
 
-            if (q.questionText.toLowerCase().includes("променлива")) {
+            if (answersForQuestion.length > 0) {
                 const selected = document.querySelector(`input[name="q${q.questionID}"]:checked`);
                 if (!selected) {
                     allCorrect = false;
                     continue;
                 }
                 userAnswer = selected.value.trim();
-                if (userAnswer !== "Променлива е място в паметта, където се съхраняват стойности.") {
-                    allCorrect = false;
-                }
             } else {
                 const input = document.getElementById(`answer-${q.questionID}`);
                 if (!input || input.value.trim() === "") {
@@ -139,10 +139,14 @@ async function loadQuizForLesson(lessonID) {
                     continue;
                 }
                 userAnswer = input.value.trim().toLowerCase();
-                // Добави конкретна проверка по въпрос
-                if (q.questionText.toLowerCase().includes("параграф") && userAnswer !== "<p>") {
+                if (correctAnswer && correctAnswer.answerText.toLowerCase() !== userAnswer) {
                     allCorrect = false;
+                    continue;
                 }
+            }
+
+            if (correctAnswer && correctAnswer.answerText.trim() !== userAnswer) {
+                allCorrect = false;
             }
         }
 
@@ -150,14 +154,13 @@ async function loadQuizForLesson(lessonID) {
             alert("Тестът е успешно преминат!");
             userProgress[lessonID] = true;
 
-            // Отключване на следващия урок
             const lessonsRes = await fetch("http://localhost:5050/api/Lessons");
-            const allLessons = (await lessonsRes.json()).filter(l => l.courseID); // добави courseID, ако имаш го глобално
+            const allLessons = (await lessonsRes.json()).filter(l => l.courseID);
             const currentLesson = allLessons.find(l => l.lessonID === lessonID);
             const nextLesson = allLessons.find(l => l.orderNumber === currentLesson.orderNumber + 1 && l.courseID === currentLesson.courseID);
 
             if (nextLesson) {
-                userProgress[nextLesson.lessonID] = false; // подготвяме го отключен
+                userProgress[nextLesson.lessonID] = false;
             }
 
             loadLessons(currentLesson.courseID);
@@ -168,7 +171,5 @@ async function loadQuizForLesson(lessonID) {
 
     quizDiv.appendChild(submitBtn);
 }
-
-
 
 window.addEventListener("DOMContentLoaded", loadCourses);
