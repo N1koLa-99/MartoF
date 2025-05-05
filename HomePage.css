@@ -1,0 +1,256 @@
+/* 🌌 Градиентен фон */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    background: linear-gradient(-45deg, #1f1c2c, #928dab, #2c3e50, #3498db);
+    background-size: 400% 400%;
+    animation: gradientMove 15s ease infinite;
+    color: #eee;
+}
+/* Променяме стандартния курсор на custom cursor */
+body {
+    cursor: none;  /* Скриваме стандартния курсор */
+}
+
+.cursor {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background-color: #00d4ff;
+    border-radius: 50%;
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+    animation: moveCursor 0.1s ease-out;
+    z-index: 9999;
+}
+
+@keyframes moveCursor {
+    0% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(0.5);
+        opacity: 0;
+    }
+}
+
+/* Малки пръски, когато курсорът се движи */
+.cursor-splash {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background-color: #ff5f5f;
+    border-radius: 50%;
+    pointer-events: none;
+    animation: splash 0.6s forwards;
+    z-index: 9998;
+}
+
+@keyframes splash {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(3);
+        opacity: 0;
+    }
+}
+
+
+@keyframes gradientMove {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+h1, h2, h3, h4 {
+    margin: 0 0 10px;
+    color: #fff;
+}
+
+.container {
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* Glassmorphism Sidebar */
+.sidebar {
+    width: 30%;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-right: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 4px 0 15px rgba(0, 0, 0, 0.3);
+    overflow-y: auto;
+    transition: all 0.3s ease;
+}
+
+/* Main Content Glass */
+.main-content {
+    flex: 1;
+    padding: 30px;
+    overflow-y: auto;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border-left: 1px solid rgba(255, 255, 255, 0.1);
+    position: relative;
+    color: #fff;
+}
+
+/* Заглавие и съдържание */
+#lessonTitle {
+    font-size: 26px;
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: #00d4ff;
+}
+
+#lessonContent {
+    font-size: 16px;
+    line-height: 1.6;
+    background: rgba(255, 255, 255, 0.08);
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    margin-bottom: 20px;
+    color: #f0f0f0;
+}
+
+/* Курсове */
+.course {
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    padding: 15px;
+    margin-bottom: 15px;
+    background-color: rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(6px);
+    color: #fff;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.course:hover {
+    background-color: rgba(0, 212, 255, 0.2);
+    transform: scale(1.03);
+}
+
+/* Уроци */
+.lesson {
+    margin-top: 15px;
+    padding: 12px 15px;
+    border-left: 5px solid #00d4ff;
+    background: rgba(0, 212, 255, 0.08);
+    border-radius: 10px;
+    color: #fff;
+    transition: all 0.3s;
+}
+
+.lesson:hover {
+    background-color: rgba(0, 212, 255, 0.15);
+}
+
+.lesson.locked {
+    opacity: 0.5;
+    cursor: not-allowed;
+    border-left-color: #888;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.lesson h4 {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+/* Иконка за заключен урок */
+.lock-icon {
+    color: #ccc;
+    margin-left: 6px;
+    font-size: 16px;
+}
+
+.hidden {
+    display: none;
+}
+
+/* Куиз секция */
+#quizSection {
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    color: #fff;
+}
+
+/* Input полета */
+input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    margin-top: 8px;
+    margin-bottom: 15px;
+    border: none;
+    border-radius: 8px;
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    font-size: 15px;
+    transition: background-color 0.3s;
+}
+
+input[type="text"]:focus {
+    background-color: rgba(255, 255, 255, 0.2);
+    outline: none;
+}
+
+/* ⚡️ Неонов бутон */
+button {
+    padding: 12px 25px;
+    background-color: transparent;
+    color: #00d4ff;
+    font-weight: bold;
+    border: 2px solid #00d4ff;
+    border-radius: 30px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: all 0.4s ease;
+    box-shadow: 0 0 10px rgba(0, 212, 255, 0.4);
+}
+
+button:hover {
+    background-color: #00d4ff;
+    color: #000;
+    transform: scale(1.05);
+    box-shadow: 0 0 20px rgba(0, 212, 255, 0.6);
+}
+
+/* Скролбар */
+.sidebar::-webkit-scrollbar,
+.main-content::-webkit-scrollbar {
+    width: 8px;
+}
+
+.sidebar::-webkit-scrollbar-thumb,
+.main-content::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 4px;
+}
+
+/* 📱 Responsive */
+@media screen and (max-width: 768px) {
+    .container {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+        height: auto;
+        border-right: none;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .main-content {
+        padding: 20px;
+    }
+}

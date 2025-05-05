@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Регистрация и Логин</title>
+    <link rel="stylesheet" href="Index.css">
+</head>
+<body>
+    <div class="container">
+        <div class="navigation">
+            <button id="showRegister">Регистрация</button>
+            <button id="showLogin">Вход</button>
+        </div>
+
+        <!-- Регистрация -->
+        <div class="form-container" id="registerContainer">
+            <h2>Регистрация</h2>
+            <form id="registrationForm">
+                <label for="username">Потребителско име:</label>
+                <input type="text" id="username" name="username" required>
+
+                <label for="email">Имейл:</label>
+                <input type="email" id="email" name="email" required>
+
+                <label for="password">Парола:</label>
+                <input type="password" id="password" name="password" required>
+
+                <label for="role">Роля:</label>
+                <select id="role" name="role" required>
+                    <option value="Admin">Администратор</option>
+                    <option value="Student">Студент</option>
+                    <option value="Teacher">Учител</option>
+                </select>
+
+                <button type="submit">Регистрирай се</button>
+            </form>
+        </div>
+
+        <!-- Логин -->
+        <div class="form-container" id="loginContainer" style="display:none;">
+            <h2>Вход</h2>
+            <form id="loginForm">
+                <label for="loginEmail">Имейл:</label>
+                <input type="email" id="loginEmail" name="email" required>
+
+                <label for="loginPassword">Парола:</label>
+                <input type="password" id="loginPassword" name="password" required>
+
+                <button type="submit">Вход</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="Index.js"></script>
+</body>
+</html>
